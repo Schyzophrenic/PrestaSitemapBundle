@@ -11,12 +11,6 @@
 
 namespace Presta\SitemapBundle\Sitemap;
 
-use Presta\SitemapBundle\Exception\Exception;
-
-if (!defined('ENT_SUBSTITUTE')) {
-    define('ENT_SUBSTITUTE', 8);
-}
-
 /**
  * Description of Utils
  *
@@ -25,46 +19,9 @@ if (!defined('ENT_SUBSTITUTE')) {
 class Utils
 {
     /**
-     * Verify method affiliated to given param
+     * @deprecated since 2.3.0, to be removed in 3.0.0
      *
-     * @param object $object
-     * @param string $name
-     *
-     * @return string
-     */
-    public static function getSetMethod($object, $name)
-    {
-        $methodName = 'set' . self::camelize($name);
-
-        if (!method_exists($object, $methodName)) {
-            throw new Exception(sprintf('The set method for parameter %s is missing', $name));
-        }
-
-        return $methodName;
-    }
-
-    /**
-     * Verify method affiliated to given param
-     *
-     * @param object $object
-     * @param string $name
-     *
-     * @return string
-     * @throws Exception
-     */
-    public static function getGetMethod($object, $name)
-    {
-        $methodName = 'get' . self::camelize($name);
-
-        if (!method_exists($object, $methodName)) {
-            throw new Exception(sprintf('The get method for parameter %s is missing', $name));
-        }
-
-        return $methodName;
-    }
-
-    /**
-     * Render a string as CDATA section
+     * Legacy alias of Utils::cdata
      *
      * @param string $string
      *
@@ -72,11 +29,23 @@ class Utils
      */
     public static function render($string)
     {
+        return self::cdata($string);
+    }
+
+    /**
+     * Wrap string with CDATA markup
+     *
+     * @param string $string
+     *
+     * @return string
+     */
+    public static function cdata($string)
+    {
         return '<![CDATA[' . $string . ']]>';
     }
 
     /**
-     * Encode special chars
+     * Encode string with html special chars
      *
      * @param string $string
      *
@@ -85,17 +54,5 @@ class Utils
     public static function encode($string)
     {
         return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-    }
-
-    /**
-     * Uppercase first letter after a space or underscore
-     *
-     * @param string $string
-     *
-     * @return string
-     */
-    public static function camelize($string)
-    {
-        return str_replace(' ', '', ucwords(str_replace('_', ' ', $string)));
     }
 }
